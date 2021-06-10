@@ -1,2 +1,9 @@
 # segments
-Exploration of segmented battle ships 
+### _Ryan Burnside_
+
+This is a project to do ... something.
+
+## License
+
+Specify license here
+
