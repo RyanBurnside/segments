@@ -34,10 +34,19 @@
                (setf results (adjoin working-item results :test #'equal))))
     (sort results #'equal)))
 
+
+(defun add-shape (canvas tag x y num-sides fillet-radius)
+  (let* ((TAU (* 2.0 PI))
+		 (inner-angle (/ TAU num-sides))
+		 (hypot-radius-angle (/ (- PI inner-angle) 2.0))
+		 (distance-to-circle-center (/ fillet-radius (cos hypot-radius-angle))))
+  distance-to-circle-center))
+
+		
+
 (defun main ()
   (with-ltk ()
-	(let ((date-picker (make-instance 
-		  (canvas (make-instance 'canvas))
+	(let ((canvas (make-instance 'canvas))
 		  (button (make-instance 'button
 								 :text "Hello"
 								 :command (lambda ()

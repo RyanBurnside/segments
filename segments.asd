@@ -6,7 +6,7 @@
   :license  "Specify license here"
   :version "0.0.1"
   :serial t
-  :depends-on (#:nodgui #:vecto)
+  :depends-on (#:nodgui #:origin #:vecto)
   :components ((:file "package")
                (:file "segments")))
 
