@@ -35,24 +35,41 @@
     (sort results #'equal)))
 
 
-(defun add-shape (canvas tag x y num-sides fillet-radius)
-  (let* ((TAU (* 2.0 PI))
+(defun add-shape (canvas tag bit-array x y fillet-radius)
+  (let* ((num-sides (length bit-array))
+		 (TAU (* 2.0 PI))
 		 (inner-angle (/ TAU num-sides))
 		 (hypot-radius-angle (/ (- PI inner-angle) 2.0))
 		 (distance-to-circle-center (/ fillet-radius (cos hypot-radius-angle))))
-  distance-to-circle-center))
-
-		
+	(dotimes (i num-sides)
+	  (let ((pt-x (+ x (* (cos (* i inner-angle)) distance-to-circle-center)))
+			(pt-y (+ y (* (sin (* i inner-angle)) distance-to-circle-center)))
+			(tex-pt-x (+ x (* (cos (* i inner-angle)) (* distance-to-circle-center 1.45))))
+			(tex-pt-y (+ y (* (sin (* i inner-angle)) (* distance-to-circle-center 1.45))))
+			(small-fill (if (= (aref bit-array i) 1) "cyan" ""))
+			(big-fill (if (= (aref bit-array i) 1) "dark cyan" "")))
+		(nodgui:create-text canvas tex-pt-x tex-pt-y i :anchor :center :justify :center)
+		(nodgui:make-circle canvas
+							pt-x
+							pt-y
+							fillet-radius
+							:fill big-fill
+							:outline "black")
+		(nodgui:make-circle canvas
+							pt-x
+							pt-y
+							(* fillet-radius .5)
+							:fill small-fill
+							:outline "black")))))
 
 (defun main ()
-  (with-ltk ()
-	(let ((canvas (make-instance 'canvas))
-		  (button (make-instance 'button
-								 :text "Hello"
-								 :command (lambda ()
-											(format t "clicked")))))
-	  (grid date-picker 0 0)
-	  (grid canvas 0 1)
-	  (grid button 0 2))))
-
-
+  (nodgui:with-nodgui (:title "My progrum" :width 640 :height 480 )
+	(let* ((canvas (make-instance 'nodgui:canvas))
+		   (exit (make-instance 'nodgui:button
+								:text "Exit"
+								:command #'nodgui:exit-wish)))
+	  (add-shape canvas "shape" #*101101000100  120 128 16)
+	  
+	  (nodgui:pack canvas :padx 0 :pady 0 :expand t :fill "BOTH")
+	  (nodgui:pack exit  :padx 0 :pady 0))))
+		  
